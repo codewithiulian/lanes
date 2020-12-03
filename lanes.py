@@ -12,14 +12,15 @@ def canny(image):
 def region_of_interest(image):
     height = image.shape[0]
     polygons = np.array([
-    [(319, height), (982, height), (554, 258)]], dtype = np.int32)
+    [(200, height), (1100, height), (550, 250)]], dtype = np.int32)
     mask = np.zeros_like(image, dtype = np.uint8)
     cv2.fillPoly(mask, polygons, (255,255,255))
+    # Apply bitwise and onto the image using the mask.
     masked_image = cv2.bitwise_and(mask, image)
     return masked_image
 
 lane_image = np.copy(image)
 canny = canny(lane_image)
-masked_image = region_of_interest(image)
+masked_image = region_of_interest(canny)
 cv2.imshow("result", masked_image)
 cv2.waitKey(0)
