@@ -1,19 +1,30 @@
-import cv2 # OpenCV
+import cv2
 import numpy as np
 
 image = cv2.imread('test_image.jpg')
 
-lane_image = np.copy(image)
-gray = cv2.cvtColor(lane_image, cv2.COLOR_RGB2GRAY)
-blur = cv2.GaussianBlur(gray, (5, 5), 0)
-"""
-Apply Canny edge detection. Pass in a threshold of
-1:3. Meaning the differences in color intensity lower
-than 50, is ignored (and therefore rendered as black).
-And the differences above 150 are considered edges And
-rendered as white.
-"""
-canny = cv2.Canny(blur, 50, 150)
+def canny(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    canny = cv2.Canny(blur, 50, 150)
+    return canny;
 
-cv2.imshow('result', canny)
+def region_of_interest(image):
+    # height is the first axis from the shape property
+    height = image.shape[0]
+    polygons = np.array([
+    [(319, height), # point B
+    (982, height), # point C
+    (554, 258)] # point A
+    ])
+    # draw a mask of the same shape as the image
+    mask = np.zeros_like(image) # zeros is color black
+    # fill the polygon with our triangle, bg color of white
+    cv2.fillPoly(mask, polygons, 255)
+    return mask
+
+lane_image = np.copy(image)
+canny = canny(lane_image)
+mask = region_of_interest(image)
+cv2.imshow("result", mask)
 cv2.waitKey(0)
