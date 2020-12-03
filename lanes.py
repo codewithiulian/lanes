@@ -16,11 +16,11 @@ def region_of_interest(image):
     [(319, height), # point B
     (982, height), # point C
     (554, 258)] # point A
-    ])
+    ], dtype = np.int32)
     # draw a mask of the same shape as the image
-    mask = np.zeros_like(image) # zeros is color black
+    mask = np.zeros_like(image, dtype = np.uint8) # zeros is color black
     # fill the polygon with our triangle, bg color of white
-    cv2.fillPoly(mask, polygons, 255)
+    cv2.fillPoly(mask, polygons, (255,255,255))
     return mask
 
 lane_image = np.copy(image)
