@@ -10,21 +10,16 @@ def canny(image):
     return canny;
 
 def region_of_interest(image):
-    # height is the first axis from the shape property
     height = image.shape[0]
     polygons = np.array([
-    [(319, height), # point B
-    (982, height), # point C
-    (554, 258)] # point A
-    ], dtype = np.int32)
-    # draw a mask of the same shape as the image
-    mask = np.zeros_like(image, dtype = np.uint8) # zeros is color black
-    # fill the polygon with our triangle, bg color of white
+    [(319, height), (982, height), (554, 258)]], dtype = np.int32)
+    mask = np.zeros_like(image, dtype = np.uint8)
     cv2.fillPoly(mask, polygons, (255,255,255))
-    return mask
+    masked_image = cv2.bitwise_and(mask, image)
+    return masked_image
 
 lane_image = np.copy(image)
 canny = canny(lane_image)
-mask = region_of_interest(image)
-cv2.imshow("result", mask)
+masked_image = region_of_interest(image)
+cv2.imshow("result", masked_image)
 cv2.waitKey(0)
